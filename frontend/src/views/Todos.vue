@@ -35,28 +35,6 @@
           <v-spacer></v-spacer>
           <v-icon color="primary" large @click="newAction()"> mdi-plus </v-icon>
         </div>
-        <v-text-field
-          v-model.trim="$v.newTodo.$model"
-          @keydown.enter="addTodo"
-          label="New Todo"
-          autofocus
-          dense
-          filled
-          hide-details
-          :class="newTodoErrors.length && 'input-errors'"
-          :color="newTodoErrors.length ? 'error' : null"
-        >
-          <v-icon v-if="newTodo" slot="append" color="primary" @click="addTodo">
-            mdi-plus
-          </v-icon>
-        </v-text-field>
-        <div class="v-text-field__details mt-2 ml-2">
-          <div class="v-messages theme--light error--text" role="alert">
-            <div class="v-messages__wrapper">
-              <div class="v-messages__message">{{ newTodoErrors[0] }}</div>
-            </div>
-          </div>
-        </div>
 
         <v-progress-linear
           v-if="!loaded"
@@ -295,6 +273,7 @@ export default {
       addMoneyModal: false,
       showBalanceStatus: false,
       balance: null,
+      loaded: false,
       actiontypes: [
         {
           value: 0,
@@ -393,6 +372,7 @@ export default {
         .get("/getActions")
         .then(({ data }) => {
           this.actions = data;
+          this.loaded = true;
           //data
           // this.showSuccessMessage("Balance added successfully", 3000);
         })
