@@ -1,0 +1,26 @@
+.auth-layout {
+  background: #22d3ee !important;
+  background: linear-gradient(90deg, #22d3ee 35%, #0ea5e9 100%) !important;
+}
+
+.app-layout {
+  background: #f4f5fb !important;
+}
+
+.indigo-lighten-6 {
+  background: #f4f5fb !important;
+}
+
+/*** TRANSITIONS ***/
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
