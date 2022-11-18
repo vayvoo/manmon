@@ -80,17 +80,11 @@ class ActionController extends Controller
             $action = new Action();
             $action->id = $actionData['id'];
             $action->user_id = Auth::id();
+            $action->description = $actionData['description'];
             $action->type = $actionData['actiontype'];
             $action->amount = $amount;
             $action->date = $actionData['date'];
-        } else {
-            $action->type = $actionData['actiontype'];
-            $action->amount = $amount;
-            $action->date = $actionData['date'];
-        }
-        $action->save();
 
-        if ($amount) {
             $balance = User::where('id', Auth::id())->first();
             if ($actionData['actiontype'] == 1) {
 
@@ -99,7 +93,26 @@ class ActionController extends Controller
                 $balance->balance -= (float) $amount;
             }
             $balance->save();
+            
+        } else {
+            $action->description = $actionData['description'];
+            $action->type = $actionData['actiontype'];
+            $diffamount = $amount - $action->amount ;
+            $action->amount = $amount;
+            $action->date = $actionData['date'];
+
+            $balance = User::where('id', Auth::id())->first();
+            if ($actionData['actiontype'] == 0) {
+
+                $balance->balance -= (float) $diffamount;
+            } else {
+                $balance->balance += (float) $diffamount;
+            }
+            $balance->save();
+            
         }
+        $action->save();
+
         return response([
             'message' => 'Updated'
         ], 200);
@@ -113,6 +126,17 @@ class ActionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $action = Action::find($id)->first();
+        $balance = User::where('id', Auth::id())->first();
+
+        if($action->type == 1){
+            $balance->balance -= $action->amount;
+        }
+        else{
+            
+            $balance->balance += $action->amount;
+        }
+        $balance->save();
+        $action->delete();
     }
 }

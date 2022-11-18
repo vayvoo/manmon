@@ -16,6 +16,7 @@ class CreateActionsTable extends Migration
         Schema::create('actions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
+            $table->string('description');
             $table->tinyInteger('type')->default(0);
             $table->decimal('amount');
             $table->date('date');

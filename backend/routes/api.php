@@ -31,10 +31,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
-
     Route::get('/currentUser', [AuthController::class, 'getUser']);
     Route::post('/setBalance', [AuthController::class, 'setBalance']);
     //Actions
     Route::get('/getActions', [ActionController::class, 'index']);
     Route::post('/addAction', [ActionController::class, 'update']);
+    Route::delete('/deleteAction/{id}', [ActionController::class, 'destroy']);
 });

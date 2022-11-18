@@ -16,6 +16,9 @@ class User extends Authenticatable
 
     public $incrementing = false;
 
+    public function actions(){
+        return $this->hasMany('App\Models\Action', 'user_id', 'id');   
+    }
     protected $keyType = 'string';
 
     /**

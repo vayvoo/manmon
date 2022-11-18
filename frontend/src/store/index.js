@@ -7,7 +7,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     layout: "default-layout",
-    backend_url: "http://manmon.loc",
     snackbar: {
       active: false,
       message: "",

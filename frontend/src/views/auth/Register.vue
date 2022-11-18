@@ -367,7 +367,7 @@ export default {
           password_confirmation: this.confirmPassword,
         })
         .then((data) => {
-          this.$router.push({ name: "todos" });
+          this.$router.push({ name: "main" });
         })
         .catch((error) => {
           if (error.response.status >= 400 && error.response.status <= 499) {

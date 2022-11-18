@@ -11,8 +11,6 @@
       >
       <v-spacer></v-spacer>
       <div>
-        <!-- <router-link class="mr-4" to="/admin/index">Admin Panel</router-link>
-        <router-link to="/quizzes/index">Test Oynasi</router-link> -->
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn

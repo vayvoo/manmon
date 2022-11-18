@@ -59,42 +59,14 @@
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    <v-text-field
-                      v-if="todoToEditId === todo.id"
-                      v-model="todoNameToEdit"
-                      @keydown.enter="updateTodo"
-                      dense
-                      class="mt-0 mb-n4"
-                    >
-                      <template v-slot:append>
-                        <v-btn
-                          small
-                          text
-                          tabindex="-1"
-                          color="grey"
-                          @click="cancelEdit"
-                        >
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          v-if="todo.name !== todoNameToEdit"
-                          small
-                          text
-                          tabindex="-1"
-                          color="primary"
-                          @click="updateTodo"
-                        >
-                          Update
-                        </v-btn>
-                      </template>
-                    </v-text-field>
                     <span
                       :class="
                         !todo.type
                           ? 'red--text text--accent-2 text-decoration-line-through'
                           : 'blue-grey--text text--darken-3'
                       "
-                      >{{ todo.amount }}</span
+                      >{{ todo.description }} ({{ todo.date }}) ||
+                      {{ todo.amount }}</span
                     >
                   </v-list-item-title>
                 </v-list-item-content>
@@ -129,7 +101,7 @@
                           </div>
                         </v-list-item-title>
                       </v-list-item>
-                      <v-list-item @click="deleteTodo(todo)">
+                      <v-list-item @click="deleteAction(todo)">
                         <v-list-item-title>
                           <div class="d-flex">
                             <icon-base
@@ -194,7 +166,7 @@
     >
       <v-card>
         <v-card-title>
-          <span class="headline">Add Balance</span>
+          <span class="headline">Add Action</span>
           <v-spacer></v-spacer>
           <v-btn color="error" x-small fab @click="addMoneyModal = false">
             <v-icon>mdi-close</v-icon>
@@ -210,6 +182,16 @@
                   label="Type"
                   solo
                 ></v-select>
+              </v-col>
+              <v-col class="pt-0" cols="12">
+                <v-text-field
+                  v-model="money.description"
+                  label="Description"
+                  type="text"
+                  solo
+                  dense
+                  clearable
+                ></v-text-field>
               </v-col>
               <v-col class="pt-0" cols="12">
                 <v-text-field
@@ -257,11 +239,6 @@ export default {
 
   data() {
     return {
-      loaded: false,
-      newTodo: "",
-      todos: [],
-      todoToEditId: null,
-      todoNameToEdit: "",
       user: null,
       actions: null,
       addBalanceModal: false,
@@ -285,21 +262,6 @@ export default {
 
   mounted() {
     this.getUser();
-    this.getActions();
-    // this.checkBalance();
-  },
-
-  computed: {
-    newTodoErrors() {
-      const errors = [];
-      if (!this.$v.newTodo.$dirty) return errors;
-      !this.$v.newTodo.required && errors.push("Todo is required");
-      return errors;
-    },
-  },
-
-  validations: {
-    newTodo: { required, maxLength: maxLength(191) },
   },
 
   methods: {
@@ -307,7 +269,9 @@ export default {
       this.$http
         .get("/currentUser")
         .then(({ data }) => {
-          this.user = data;
+          this.user = data[0];
+          this.actions = data[0].actions;
+          this.loaded = true;
           if (this.user.balance == null) {
             this.addBalanceModal = true;
           }
@@ -317,11 +281,6 @@ export default {
           this.showErrorMessage();
         });
     },
-    // checkBalance() {
-    //   if (this.user && this.user.balance == null) {
-    //     this.addBalanceModal = true;
-    //   }
-    // },
     setBalance() {
       this.$http
         .post("/setBalance", {
@@ -352,7 +311,6 @@ export default {
           money: this.money,
         })
         .then(({ data }) => {
-          this.getActions();
           this.getUser();
           this.addMoneyModal = false;
           this.showSuccessMessage("Balance added successfully", 3000);
@@ -362,54 +320,14 @@ export default {
           // this.showErrorMessage();
         });
     },
-    getActions() {
+
+    deleteAction(todo) {
       this.$http
-        .get("/getActions")
+        .delete("/deleteAction/" + todo.id)
         .then(({ data }) => {
-          this.actions = data;
-          this.loaded = true;
-          //data
-          // this.showSuccessMessage("Balance added successfully", 3000);
-        })
-        .catch((error) => {
-          console.log(error);
-          this.showErrorMessage();
-        });
-    },
-    addTodo() {
-      this.$v.$touch();
+          this.getUser();
 
-      if (this.$v.$invalid) return;
-
-      this.$http
-        .post("/todos", {
-          name: this.newTodo,
-        })
-        .then(({ data }) => {
-          this.todos.push(data.todo);
-          this.newTodo = "";
-          this.$v.$reset();
-
-          this.showSuccessMessage("New Todo was added successfully", 3000);
-        })
-        .catch((error) => {
-          console.log(error);
-          this.showErrorMessage();
-        });
-    },
-
-    cancelEdit() {
-      this.todoToEditId = null;
-      this.todoNameToEdit = "";
-    },
-
-    deleteTodo(todo) {
-      this.$http
-        .delete("/todos/" + todo.id)
-        .then(({ data }) => {
-          this.todos = this.todos.filter((item) => item.id !== todo.id);
-
-          this.showSuccessMessage("Todo has been deleted");
+          this.showSuccessMessage("Action has been deleted");
         })
         .catch((error) => {
           console.log(error);
@@ -418,85 +336,8 @@ export default {
     },
 
     edit(todo) {
-      this.todoToEditId = todo.id;
-      this.todoNameToEdit = todo.name;
-    },
-
-    getTodos() {
-      return this.$http
-        .get("/todos")
-        .then(({ data }) => {
-          this.todos = data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-
-    moveTodo(e, toTodoIndex) {
-      const toTodo = this.todos[toTodoIndex];
-
-      const fromTodoIndex = e.dataTransfer.getData("from-todo-index");
-
-      const todoToMove = this.todos.splice(fromTodoIndex, 1)[0];
-
-      this.todos.splice(toTodoIndex, 0, todoToMove);
-
-      if (todoToMove.id !== toTodo.id) {
-        this.updateSortOrder(todoToMove, toTodo);
-      }
-    },
-
-    pickupTodo(e, todoIndex) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.dropEffect = "move";
-
-      e.dataTransfer.setData("from-todo-index", todoIndex);
-    },
-
-    updateTodo() {
-      this.$http
-        .put("/todos/" + this.todoToEditId, {
-          name: this.todoNameToEdit,
-        })
-        .then(({ data }) => {
-          const todo = this.todos.find((item) => item.id === this.todoToEditId);
-          todo.name = this.todoNameToEdit;
-          this.cancelEdit();
-
-          this.showSuccessMessage("Todo has been updated");
-        })
-        .catch((error) => {
-          console.log(error);
-          this.showErrorMessage();
-        });
-    },
-
-    updateSortOrder(todoToMove, toTodo) {
-      this.$http
-        .put("/update-sort-order", {
-          todoToMoveId: todoToMove.id,
-          toTodoId: toTodo.id,
-        })
-        .then(({ data }) => {})
-        .catch((error) => {
-          console.log(error);
-          this.showErrorMessage();
-        });
-    },
-
-    updateTodoStatus(todo) {
-      this.$http
-        .put("/todos/update-status/" + todo.id, {
-          done: !todo.done,
-        })
-        .then(({ data }) => {
-          todo.done = data.todo.done;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.showErrorMessage();
-        });
+      this.addMoneyModal = true;
+      this.money = Object.assign({}, todo);
     },
   },
 };

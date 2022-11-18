@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function getUser()
     {
-        return Auth::user();
+        return Auth::user()->with('actions')->get();
     }
     public function setBalance(Request $request)
     {
@@ -23,6 +23,7 @@ class AuthController extends Controller
             $user->save();
         }
     }
+    
     public function login(Request $request)
     {
         $data = $request->validate([

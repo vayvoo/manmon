@@ -17,13 +17,13 @@ const routes = [
     },
   },
   {
-    path: "/todos",
-    name: "todos",
+    path: "/main",
+    name: "main",
     meta: {
       auth: true,
     },
     component: () =>
-      import(/* webpackChunkName: "todos" */ "../views/Todos.vue"),
+      import(/* webpackChunkName: "todos" */ "../views/Main.vue"),
   },
 
   // Auth
