@@ -7,12 +7,12 @@
         <icon-check-square-logo />
       </icon-base>
       <span class="text-h6 font-weight-light primary--text text--darken-1"
-        >QUIZ App</span
+        >Money Management App</span
       >
       <v-spacer></v-spacer>
       <div>
-        <router-link class="mr-4" to="/admin/index">Admin Panel</router-link>
-        <router-link to="/quizzes/index">Test Oynasi</router-link>
+        <!-- <router-link class="mr-4" to="/admin/index">Admin Panel</router-link>
+        <router-link to="/quizzes/index">Test Oynasi</router-link> -->
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn

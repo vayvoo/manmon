@@ -11,7 +11,7 @@
               <span
                 class="text-h5 font-weight-light primary--text text--darken-1"
               >
-                Sessiya App
+                Money Management App
               </span>
             </div>
 

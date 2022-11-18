@@ -37,17 +37,4 @@ Route::middleware('auth:sanctum')->group(function () {
     //Actions
     Route::get('/getActions', [ActionController::class, 'index']);
     Route::post('/addAction', [ActionController::class, 'update']);
-    // Todos
-    Route::put('/update-sort-order', [TodoController::class, 'updateSortOrder']);
-    Route::put('/todos/update-status/{id}', [TodoController::class, 'updateStatus']);
-    Route::get('/questions', [QuestionsController::class, 'index']);
-    Route::get('/quizzes', [QuizzesController::class, 'index']);
-    Route::post('/quizzes/update', [QuizzesController::class, 'update']);
-    Route::post('/quizzes/addFile/{id}', [QuizzesController::class, 'addFile']);
-    Route::delete('/quizzes/delete/{id}', [QuizzesController::class, 'destroy']);
-    Route::post('/sendAnswers', [QuestionsController::class, 'sendAnswers']);
-    Route::post('/startQuiz', [ResultsController::class, 'createAttempt']);
-    Route::apiResources([
-        'todos' => TodoController::class,
-    ]);
 });

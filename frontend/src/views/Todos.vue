@@ -46,11 +46,6 @@
 
         <v-card class="mt-2 mb-10">
           <v-list>
-            <div
-              class="blue-grey--text caption text--darken-1 text-center mt-2"
-            >
-              Reorder todos in a list using the mouse
-            </div>
             <transition-group name="fade" mode="out-in">
               <v-list-item
                 v-for="(todo, $index) in actions"

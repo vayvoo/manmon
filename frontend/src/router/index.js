@@ -25,64 +25,6 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "todos" */ "../views/Todos.vue"),
   },
-  // {
-  //   path: "quiz/show/:documentTemplateId",
-  //   component: () => import("@/views/quiz/admin/Index"),
-  //   meta: {
-  //     auth: true,
-  //   },
-  // },
-  {
-    path: "/admin",
-    component: () => import("@/layouts/DefaultLayout"),
-    children: [
-      {
-        path: "index",
-        component: () => import("@/views/quiz/admin/Index"),
-        meta: {
-          auth: true,
-        },
-      },
-    ],
-  },
-  {
-    path: "/quizzes",
-    component: () => import("@/layouts/DefaultLayout"),
-    children: [
-      {
-        path: "index",
-        component: () => import("@/views/quiz/Quizzes"),
-        meta: {
-          auth: true,
-        },
-      },
-      {
-        path: "attempt",
-        component: () => import("@/views/quiz/Attempt"),
-        meta: {
-          auth: true,
-        },
-      },
-    ],
-  },
-  // {
-  //   path: "/quiz",
-  //   name: "quiz",
-  //   meta: {
-  //     auth: true,
-  //   },
-  //   component: () =>
-  //     import(/* webpackChunkName: "todos" */ "../views/quiz/Quizzes.vue"),
-  // },
-  {
-    path: "/student",
-    name: "student",
-    meta: {
-      auth: true,
-    },
-    component: () =>
-      import(/* webpackChunkName: "todos" */ "../views/Student.vue"),
-  },
 
   // Auth
   {
