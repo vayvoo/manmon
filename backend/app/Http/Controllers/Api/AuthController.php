@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function getUser()
     {
-        return Auth::user()->with('actions')->get();
+        return User::with('actions')->where('id', Auth::id())->get();
     }
     public function setBalance(Request $request)
     {
