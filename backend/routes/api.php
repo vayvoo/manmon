@@ -4,10 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ActionController;
-use App\Http\Controllers\Api\TodoController;
-use App\Http\Controllers\Api\QuestionsController;
-use App\Http\Controllers\Api\QuizzesController;
-use App\Http\Controllers\Api\ResultsController;
 
 /*
 |--------------------------------------------------------------------------
