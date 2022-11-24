@@ -44,6 +44,20 @@
           height="4"
         ></v-progress-linear>
 
+        <div class="d-flex justify-space-around">
+          <div class="d-flex flex-column align-center">
+            <p class="income-text mb-n1" style="font-size: 32px">
+              + {{ allIncome }} so'm
+            </p>
+            <p class="income-text">Kirim</p>
+          </div>
+          <div class="d-flex flex-column align-center">
+            <p class="expance-text mb-n1" style="font-size: 32px">
+              - {{ allExpance }} so'm
+            </p>
+            <p class="expance-text">Chiqim</p>
+          </div>
+        </div>
         <v-card class="mt-2 mb-10">
           <v-list>
             <transition-group name="fade" mode="out-in">
@@ -58,17 +72,25 @@
                 class="grabbable"
               >
                 <v-list-item-content>
-                  <v-list-item-title>
-                    <span
-                      :class="
-                        !todo.type
-                          ? 'red--text text--accent-2 text-decoration-line-through'
-                          : 'blue-grey--text text--darken-3'
-                      "
-                      >{{ todo.description }} ({{ todo.date }}) ||
-                      {{ todo.amount }}</span
-                    >
-                  </v-list-item-title>
+                  <div class="d-flex justify-space-between">
+                    <v-list-item-title>
+                      {{ todo.description }}
+                    </v-list-item-title>
+                    <div>
+                      <v-list-item-subtitle
+                        v-if="todo.type == 0"
+                        class="font-weight-bold"
+                      >
+                        - {{ todo.amount }} so'm
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-else class="font-weight-bold">
+                        {{ todo.amount }} so'm
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        {{ todo.date }}
+                      </v-list-item-subtitle>
+                    </div>
+                  </div>
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-menu offset-y>
@@ -246,6 +268,8 @@ export default {
       showBalanceStatus: false,
       balance: null,
       loaded: false,
+      allIncome: 0,
+      allExpance: 0,
       actiontypes: [
         {
           value: 0,
@@ -266,11 +290,20 @@ export default {
 
   methods: {
     getUser() {
+      this.allIncome = 0;
+      this.allExpance = 0;
       this.$http
         .get("/currentUser")
         .then(({ data }) => {
           this.user = data[0];
           this.actions = data[0].actions;
+          this.actions.filter((v) => {
+            if (v.type == 1) {
+              this.allIncome += parseInt(v.amount);
+            } else {
+              this.allExpance += parseInt(v.amount);
+            }
+          });
           this.loaded = true;
           if (this.user.balance == null) {
             this.addBalanceModal = true;
@@ -346,5 +379,11 @@ export default {
 <style lang="css" scoped>
 .input-errors >>> .v-input__control > .v-input__slot:before {
   border-color: #f56c6c !important;
+}
+.income-text {
+  color: rgba(47, 195, 195, 0.721);
+}
+.expance-text {
+  color: red;
 }
 </style>
