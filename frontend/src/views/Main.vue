@@ -58,7 +58,60 @@
             <p class="expance-text">Chiqim</p>
           </div>
         </div>
-        <v-card class="mt-2 mb-10">
+        <div class="d-flex flex-wrap justify-center">
+          <v-card
+            class="ma-2"
+            max-width="225"
+            outlined
+            v-for="(todo, $index) in actions"
+            :key="todo.id"
+          >
+            <v-list-item three-line>
+              <v-list-item-content>
+                <div class="text-overline mb-4 d-flex">
+                  <span>{{ todo.date }}</span>
+                  <v-spacer></v-spacer>
+                  <span>Category</span>
+                </div>
+                <div class="d-flex flex-column">
+                  <v-list-item-title
+                    class="text-h5 mb-1 mx-auto"
+                    v-if="todo.type == 0"
+                  >
+                    - {{ todo.amount }} so'm
+                  </v-list-item-title>
+                  <v-list-item-title
+                    class="text-h5 mb-1 mx-auto income-text"
+                    v-if="todo.type == 1"
+                  >
+                    + {{ todo.amount }} so'm
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="mx-auto">{{
+                    todo.description
+                  }}</v-list-item-subtitle>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-card-actions>
+              <v-btn outlined rounded text color="primary" @click="edit(todo)">
+                Edit
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                outlined
+                rounded
+                text
+                color="error"
+                @click="deleteAction(todo)"
+              >
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </div>
+
+        <!-- <v-card class="mt-2 mb-10">
           <v-list>
             <transition-group name="fade" mode="out-in">
               <v-list-item
@@ -146,7 +199,7 @@
               </v-list-item>
             </transition-group>
           </v-list>
-        </v-card>
+        </v-card> -->
       </v-flex>
     </v-layout>
     <v-dialog

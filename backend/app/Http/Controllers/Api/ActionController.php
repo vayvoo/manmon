@@ -126,7 +126,7 @@ class ActionController extends Controller
      */
     public function destroy($id)
     {
-        $action = Action::find($id)->first();
+        $action = Action::find($id);
         $balance = User::where('id', Auth::id())->first();
 
         if($action->type == 1){
